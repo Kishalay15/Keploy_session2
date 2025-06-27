@@ -17,4 +17,12 @@
 ## 🧪 Sample Request
 
 ```bash
-curl -X GET http://localhost:8080/api/tasks
+curl -X GET http://localhost:9090/api/tasks
+```
+
+## ✅ API Testing with Keploy
+
+Keploy recorded and ran tests from real API traffic. Here's a snapshot from the dashboard:
+
+![Keploy API Test Report](./keploy/test-report.png)
+
