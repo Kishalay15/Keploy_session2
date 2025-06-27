@@ -1,0 +1,36 @@
+name: Keploy API Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  keploy-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: Coronwalis@15
+          MYSQL_DATABASE: keploy_demo
+        options: "--health-cmd='mysqladmin ping --silent' --health-interval=10s --health-timeout=5s --health-retries=3"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build JAR (skip tests)
+        run: mvn clean package -DskipTests
+
+      - name: Download and run Keploy tests
+        run: |
+          curl -L https://github.com/keploy/keploy/releases/latest/download/keploy-linux-amd64 -o keploy
+          chmod +x keploy
+          ./keploy test -c "java -jar target/demo-0.0.1-SNAPSHOT.jar" -r 1
